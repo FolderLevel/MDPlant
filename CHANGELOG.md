@@ -6,6 +6,17 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+## [2.1.2] - 2025-5-13
+
+### Added
+- 支持list转plantuml时序图for/while循环
+
+### Changed
+-
+
+### Fixed
+-
+
 ## [2.1.1] - 2025-4-23
 
 ### Added
