@@ -6,6 +6,18 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+## [2.1.3] - 2025-5-19
+
+### Added
+- 支持list转plantuml时序图if/else循环
+
+### Changed
+-
+
+### Fixed
+-
+
+
 ## [2.1.2] - 2025-5-13
 
 ### Added
