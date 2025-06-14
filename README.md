@@ -40,9 +40,9 @@ Markdown Tools
 
 # 参考示例
 
-* https://github.com/ZengjfOS/RaspberryPi
+* https://github.com/FolderLevel/RaspberryPi
   * 一级文档参考
-* https://github.com/ZengjfOS/MDPlant/tree/DocsExample
+* https://github.com/FolderLevel/MDPlant/tree/DocsExample
   * 多级文档参考
 
 # 基本快捷功能
@@ -51,6 +51,7 @@ Markdown Tools
 * macOS:
   * CMD + Enter
   * Ctrl + Enter
+* **如果快捷键不生效，请在VS Code快捷键映射中自行重定义按键映射**
 
 ## list
 
