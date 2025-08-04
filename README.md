@@ -126,3 +126,7 @@ index标题，直接按快捷键后输入`.`后按快捷键，`.`表示当前目
 `copy `字段后跟相对路径或者绝对路径
 
 copy src/0000_Template/docs/0002_green_image.md
+
+# 版权
+
+Copyright (c) 2020 ~ 2025 zengjf. All rights reserved.
