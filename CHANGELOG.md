@@ -4,6 +4,17 @@ All notable changes to the "mdplant" extension will be documented in this file.
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [2.1.5] - 2025-8-5
+
+### Added
+- 
+
+### Changed
+- 代码段有语言标识也支持indent功能
+
+### Fixed
+-
+
 ## [2.1.4] - 2025-8-4
 
 ### Added
