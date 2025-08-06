@@ -989,6 +989,11 @@ export async function doTable(activeEditor: vscode.TextEditor)
 
             let startLine = textBlock.start
             let endLine = textBlock.end
+            if (textBlock.start > textBlock.end) {
+                startLine = textBlock.end
+                endLine = textBlock.start
+            }
+
             let currentFileDir = mdplantlibapi.getRelativeDir(activeEditor)
             let folderPath = mdplantlibapi.getRootPath(activeEditor) + "/" + currentFileDir + "/" + msg
             logger.info(folderPath)
@@ -1000,7 +1005,10 @@ export async function doTable(activeEditor: vscode.TextEditor)
                 }).then((value) => {
                     activeEditor.edit(edit => {
                         let outputString = mdplantlibapi.refreshReadmeDocsTable(undefined, folderPath)
-                        edit.insert(new vscode.Position(startLine, 0), outputString)
+                        if (textBlock.textBlock.length != 0)
+                            edit.insert(new vscode.Position(startLine, 0), outputString)
+                        else
+                            edit.insert(new vscode.Position(startLine, 0), "\n" + outputString + "\n")
                     }).then(value => {
                         mdplantlibapi.cursor(activeEditor, startLine)
                     })
