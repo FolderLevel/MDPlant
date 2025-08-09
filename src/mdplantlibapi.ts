@@ -14,8 +14,9 @@ const logger                        = new Loggger("mdplantlib", true)
  */
 export function getGitConfig(){
     let configSrcs = ["--global", "--local"]
-    let gitConfigDict: { [key: string]: string } = {};
+    let gitConfigDict: { [key: string]: string } = {"user.name": "N/A", "user.email": "N/A"};
     let rootPath = getRootPath(undefined)
+
     logger.debug(`getGitConfig: ${rootPath}`)
     configSrcs.forEach(configSrc => {
         try {
@@ -37,6 +38,7 @@ export function getGitConfig(){
             logger.debug(`Error getting Git config ${configSrc}: ${error}`);
         }
     });
+
     return gitConfigDict;
 }
 
