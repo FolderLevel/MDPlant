@@ -195,6 +195,50 @@ export async function doPlantuml(activeEditor: vscode.TextEditor)
     }
 }
 
+export function doExcel(activeEditor: vscode.TextEditor, clipboardContent = "")
+{
+    if (clipboardContent.length > 0) {
+        // 1. 按行分割
+        let excelLines = clipboardContent.split("\n").map(line => line.replace(/\r$/, ''));
+        let rows = excelLines.map(line => line.split("\t"));
+
+        // 2. 统计每列最大宽度
+        let colWidths: number[] = [];
+        rows.forEach(row => {
+            row.forEach((cell, idx) => {
+                let len = cell.length;
+                if (!colWidths[idx] || len > colWidths[idx]) {
+                    colWidths[idx] = len;
+                }
+            });
+        });
+
+        // 3. 补齐每个单元格内容
+        function padCell(cell: string, width: number) {
+            return cell + " ".repeat(width - cell.length);
+        }
+
+        let paddedRows = rows.map(row =>
+            row.map((cell, idx) => padCell(cell, colWidths[idx]))
+        );
+
+        // 4. 生成 Markdown 表格字符串
+        let header = paddedRows[0].join(" | ");
+        let separator = colWidths.map(w => "-".repeat(w)).join(" | ");
+        let body = paddedRows.slice(1).map(row => row.join(" | ")).join("\n");
+        let markdownTable = `${header}\n${separator}\n${body}`;
+
+        // 5. 替换当前行内容
+        var line = activeEditor.selection.active.line;
+        activeEditor.edit(edit => {
+            let range = new vscode.Range(activeEditor.document.lineAt(line).range.start, activeEditor.document.lineAt(line).range.end);
+            edit.replace(range, markdownTable);
+        }).then(value => {
+            mdplantlibapi.cursor(activeEditor, line);
+        });
+    }
+}
+
 export function doList(activeEditor: vscode.TextEditor, clipboardContent = "")
 {
     let line = activeEditor.selection.active.line
@@ -340,8 +384,8 @@ export function doIndent(activeEditor: vscode.TextEditor)
     }
 }
 
-export function doTableLineShortcut(activeEditor: vscode.TextEditor, lineValue: string) {
-    let output: string
+export async function doTableLineShortcut(activeEditor: vscode.TextEditor, lineValue: string) {
+    let output: string = ""
     var line = activeEditor.selection.active.line
     let textBlock = mdplantlibapi.getTextBlock(activeEditor, line, false)
     let startLine = textBlock.start
@@ -350,7 +394,25 @@ export function doTableLineShortcut(activeEditor: vscode.TextEditor, lineValue: 
     let relativeFilePath = lineValue.replace(currentFileDir + "/", "")
     let prefixLine = "<!-- " + relativeFilePath + " -->\n"
 
-    output = mdplantlibapi.convert2Table(relativeFilePath, mdplantlibapi.getRootPath(activeEditor) + "/" + currentFileDir)
+    if (textBlock.textBlock[0].trim() == "table") {
+        let clipboardContent = (await vscode.env.clipboard.readText()).trim()
+        // excel table paste
+        if (clipboardContent.length > 0 && clipboardContent.includes("\t") && clipboardContent.includes("\n")) {
+            let range = new vscode.Range(activeEditor.document.lineAt(line).range.start, activeEditor.document.lineAt(line).range.end)
+            let lineText = activeEditor.document.getText(range)
+            if (lineText.trim().startsWith("table")) {
+                logger.info("excel clipboard: \n" + clipboardContent)
+
+                doExcel(activeEditor, clipboardContent)
+                vscode.env.clipboard.writeText("")
+            }
+        }
+
+        return true
+    } else {
+        output = mdplantlibapi.convert2Table(relativeFilePath, mdplantlibapi.getRootPath(activeEditor) + "/" + currentFileDir)
+    }
+
     
     if (output.length > 0) {
         activeEditor.edit(edit => {
@@ -573,6 +635,8 @@ export async function doSubproject(filePath: string) {
                         await vscode.workspace.openTextDocument(docsPath + "/" + msg + "/README.md").then( async doc => {
                             await vscode.window.showTextDocument(doc, { preview: false }).then(async editor => {
                                 logger.info("show file success...")
+
+                                vscode.workspace.saveAll()
                             })
                         })
                     }
@@ -1365,10 +1429,12 @@ export function activate(context: vscode.ExtensionContext) {
             let clipboardContent = (await vscode.env.clipboard.readText()).trim()
             if (clipboardContent.length > 0 && fs.existsSync(mdplantlibapi.getRootPath(undefined) + "/" + mdplantlibapi.getRelativePath(clipboardContent))) {
                 logger.info("clipboard: " + clipboardContent)
+
                 doList(activeEditor, mdplantlibapi.getRelativePath(clipboardContent))
+                vscode.env.clipboard.writeText("")
 
                 return
-            }
+            } 
 
             // check table and create menu
             for (var i = (startLine - 1); i >= 0; i--) {
