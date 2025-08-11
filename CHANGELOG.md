@@ -4,6 +4,17 @@ All notable changes to the "mdplant" extension will be documented in this file.
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [2.1.11] - 2025-8-11
+
+### Added
+- 
+
+### Changed
+- 
+
+### Fixed
+- fix indent check error
+
 ## [2.1.10] - 2025-8-9
 
 ### Added
