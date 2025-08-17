@@ -4,6 +4,18 @@ All notable changes to the "mdplant" extension will be documented in this file.
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [2.1.12] - 2025-8-17
+
+### Added
+- 
+
+### Changed
+- 调整sphinx配置到sphinx目录中
+- 支持在非MDPlant目录结构中将行内代码输出到终端中
+
+### Fixed
+- 
+
 ## [2.1.11] - 2025-8-11
 
 ### Added

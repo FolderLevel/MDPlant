@@ -1187,6 +1187,21 @@ export async function doTerminal(activeEditor: vscode.TextEditor, activeTerminal
     let cmd = ""
     let currentFileDir = mdplantlibapi.getRelativeDir(activeEditor)
     let rootPath = mdplantlibapi.getRootPath(activeEditor).replace(/\\/g, "/")
+
+    if (rootPath == undefined || rootPath[0] == undefined) {
+        logger.info("root path is undefined")
+
+        let matchValue = inLineCodeRE.exec(rawText)
+        if (matchValue) {
+            cmd = matchValue[1]
+            logger.info(cmd)
+
+            activeTerminal.sendText(cmd, true)
+        }
+
+        return true
+    }
+
     let rootPathUp = rootPath[0].toUpperCase() + rootPath.substring(1)
 
     if (rawText.trimLeft().startsWith("```"))
