@@ -1145,6 +1145,43 @@ export async function doSelectText(activeEditor: vscode.TextEditor)
     }
 }
 
+function provideHover(document: vscode.TextDocument, position: vscode.Position) {
+    const fileName = document.fileName;
+    if (fileName.endsWith(".md")) {
+        console.log('provideHover');
+
+        // Get the current line where mouse is hovering
+        const line = position.line;
+        const lineText = document.lineAt(line).text;
+
+        // Check for Markdown inline code (text between backticks)
+        const inlineCodeRegex = /`([^`]+)`/g;
+        let match;
+
+        while ((match = inlineCodeRegex.exec(lineText)) !== null) {
+            const codeContent = match[1];
+            const startIndex = match.index;
+            const endIndex = startIndex + match[0].length;
+
+            // Check if cursor is within this code block
+            if (position.character >= startIndex && position.character <= endIndex) {
+                const range = new vscode.Range(
+                    new vscode.Position(line, startIndex),
+                    new vscode.Position(line, endIndex)
+                );
+
+                // Create hover message with command link
+                const hoverMessage = new vscode.MarkdownString(
+                    `[Send to Terminal](command:mdplant.sendToTerminal?${encodeURIComponent(JSON.stringify([codeContent]))})`
+                );
+                hoverMessage.isTrusted = true;
+
+                return new vscode.Hover(hoverMessage, range);
+            }
+        }
+    }
+}
+
 export async function doTerminal(activeEditor: vscode.TextEditor, activeTerminal: vscode.Terminal) {
     // console.log(activeTerminal.name)
     logger.info("doTerminal: " + terminalType)
@@ -1607,6 +1644,27 @@ export function activate(context: vscode.ExtensionContext) {
             mdplantlibapi.setConfig("MDPlant.terminal.type", terminalType)
         }
 	}));
+
+    context.subscriptions.push(vscode.languages.registerHoverProvider('markdown', {
+        provideHover
+    }));
+
+    // Register command for sending code to terminal
+    disposable = vscode.commands.registerCommand('mdplant.sendToTerminal', async (args: string) => {
+        console.log("sendToTerminal args: " + args)
+
+        let terminal = vscode.window.activeTerminal
+        if (terminal != undefined) {
+            terminal.sendText(args);
+        } else {
+            terminal = vscode.window.createTerminal("MDPlant")
+            terminal.show()
+            terminal.sendText(args);
+        }
+    });
+
+    context.subscriptions.push(disposable);
+
 }
 
 // this method is called when your extension is deactivated

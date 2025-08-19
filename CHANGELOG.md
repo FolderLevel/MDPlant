@@ -4,6 +4,18 @@ All notable changes to the "mdplant" extension will be documented in this file.
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [2.1.13] - 2025-8-20
+
+### Added
+- 支持行内代码鼠标悬停提示，将行内代码转到终端输入
+
+### Changed
+- 
+- 
+
+### Fixed
+- 
+
 ## [2.1.12] - 2025-8-17
 
 ### Added
