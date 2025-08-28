@@ -275,15 +275,20 @@ export function getTextBlockV2(editor: vscode.TextEditor, boundary: boolean = tr
                 spaceStart = spaceStart + 1
                 spaceEnd   = spaceEnd - 1
             } else {
-                if (contentArray[spaceStart].trim().length == 0)
-                    spaceStart = spaceStart + 1
+                if (spaceStart != spaceEnd) {
+                    if (contentArray[spaceStart].trim().length == 0)
+                        spaceStart = spaceStart + 1
 
-                if (contentArray[spaceEnd].trim().length == 0)
-                    spaceEnd = spaceEnd - 1
+                    if (contentArray[spaceEnd].trim().length == 0)
+                        spaceEnd = spaceEnd - 1
+                }
             }
         }
 
-        textBlock = contentArray.slice(spaceStart, spaceEnd + 1)
+        if ((spaceStart == spaceEnd) && (contentArray[spaceStart].trim().length == 0)) {
+            textBlock = contentArray.slice(spaceStart, spaceEnd)
+        } else
+            textBlock = contentArray.slice(spaceStart, spaceEnd + 1)
     }
 
     // 检查代码块是否属于同一代码块
@@ -548,7 +553,8 @@ export function doMenuIndex(fileName:string, contentArray: string[]) {
 }
 
 export function refreshReadmeDocsTable(outputFile: string | null | undefined, subProjectDocsDir: string) {
-    return mdplantlib.refreshReadmeDocsTable(outputFile, subProjectDocsDir).content
+    let author = getConfig("MDPlant.docs.author", false)
+    return mdplantlib.refreshReadmeDocsTable(outputFile, subProjectDocsDir, author).content
 }
 
 export function generateIndexTable(rootPath: string, relativePath: string | undefined, suffix: string) {
@@ -716,4 +722,8 @@ export function mergeDocument(rootPath:string, srcPath: string) {
 
 export function formatIndex(srcPath: string, fileIndex: string = "") {
     return mdplantlib.formatIndex(srcPath, fileIndex)
+}
+
+export function generateAuthorInfo(authorInfo: string[], info: { [key: string]: string }) {
+    return mdplantlib.generateAuthorInfo(authorInfo, info)
 }

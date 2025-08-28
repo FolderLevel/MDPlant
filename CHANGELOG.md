@@ -4,6 +4,18 @@ All notable changes to the "mdplant" extension will be documented in this file.
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [2.1.14] - 2025-8-30
+
+### Added
+- 支持作者信息功能，可以通过配置功能开启README.md docs表格中添加作者
+
+### Changed
+- 
+- 
+
+### Fixed
+- 修复在获取文本块的算法错误
+
 ## [2.1.13] - 2025-8-20
 
 ### Added

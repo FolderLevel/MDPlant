@@ -11,6 +11,7 @@ import * as MindMapVP from "./MindMapViewProvider"
 import * as WelcomPageVP from "./WelcomePageProvider"
 import * as ClassVP from "./ClassViewProvider"
 import { getLastDocInfo } from 'mdplantlib/lib/project'
+import { log } from 'console'
 const logger = new mdplantlibapi.Loggger("mdplant", true)
 let terminalTypes = ["none", "split"]
 let terminalType = "none"
@@ -57,6 +58,39 @@ export function doPlantumlLineShortcut(activeEditor: vscode.TextEditor, lineText
                 })
             })
         }
+    }
+}
+
+export async function doAuthor(activeEditor: vscode.TextEditor) {
+    logger.info("doAuthor")
+
+    var line = activeEditor.selection.active.line
+    let textBlock = mdplantlibapi.getTextBlock(activeEditor, line, false)
+    let gitAuthor = mdplantlibapi.getGitConfig()
+
+    let startLine = textBlock.start
+    let endLine = textBlock.end
+    if (startLine > endLine) {
+        startLine = textBlock.end
+        endLine = textBlock.start
+    }
+
+    logger.info(textBlock)
+
+    if (!textBlock.textBlock.join("").includes(gitAuthor["user.name"])
+            || !textBlock.textBlock.join("").includes(gitAuthor["user.email"])) {
+        let authorInfo = mdplantlibapi.generateAuthorInfo(textBlock.textBlock, gitAuthor)
+
+        logger.info(authorInfo)
+
+        activeEditor.edit(edit => {
+            let range = new vscode.Range(activeEditor.document.lineAt(startLine).range.start, activeEditor.document.lineAt(endLine).range.end)
+            edit.replace(range, authorInfo.join("\n"))
+        }).then(value => {
+            mdplantlibapi.cursor(activeEditor, startLine)
+        })
+    } else {
+        logger.info("this author is already exists")
     }
 }
 
@@ -1454,6 +1488,9 @@ export function activate(context: vscode.ExtensionContext) {
                     case mdplantlibapi.projectTextBlockTypeEnum.copy:
                         doCopyShortcut(activeEditor, textBlockInfo.content)
                         break
+                    case mdplantlibapi.projectTextBlockTypeEnum.author:
+                        doAuthor(activeEditor)
+                        break
                     default:
                         break
                 }
@@ -1507,7 +1544,7 @@ export function activate(context: vscode.ExtensionContext) {
 
                 if (lineText.startsWith("# ") || lineText.startsWith("## ")) {
                     var fragments = lineText.trim().split(" ")
-                    if (fragments.length == 2) {
+                    if (fragments.length >= 2) {
                         if (fragments[1].toLowerCase() == "docs"  || fragments[1].toLowerCase() == "文档索引") {
                             doTable(activeEditor)
                             return
@@ -1525,6 +1562,11 @@ export function activate(context: vscode.ExtensionContext) {
 
                         if (fragments[1].toLowerCase() == "refers" || fragments[1].toLowerCase() == "参考文档") {
                             doRefers(activeEditor)
+                            return
+                        }
+
+                        if (fragments[1].toLowerCase() == "author" || fragments[1].toLowerCase() == "作者信息") {
+                            doAuthor(activeEditor)
                             return
                         }
                     }
