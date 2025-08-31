@@ -5,13 +5,13 @@ import * as fs from 'fs'
 import * as path from 'path'
 
 import * as mdplantlibapi from "./mdplantlibapi"
-import * as SequenceVP from "./SequenceViewProvider"
-import * as GanttVP from "./GanttViewProvider"
-import * as MindMapVP from "./MindMapViewProvider"
-import * as WelcomPageVP from "./WelcomePageProvider"
-import * as ClassVP from "./ClassViewProvider"
+import * as SequenceVP from "./lib/plantuml/SequenceViewProvider"
+import * as GanttVP from "./lib/plantuml/GanttViewProvider"
+import * as MindMapVP from "./lib/plantuml/MindMapViewProvider"
+import * as WelcomPageVP from "./lib/plantuml/WelcomePageProvider"
+import * as ClassVP from "./lib/plantuml/ClassViewProvider"
 import { getLastDocInfo } from 'mdplantlib/lib/project'
-import { log } from 'console'
+
 const logger = new mdplantlibapi.Loggger("mdplant", true)
 let terminalTypes = ["none", "split"]
 let terminalType = "none"

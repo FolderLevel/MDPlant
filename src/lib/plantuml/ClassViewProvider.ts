@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import * as mdplantlibapi from "./mdplantlibapi"
+import * as mdplantlibapi from "../../mdplantlibapi"
 import * as path from 'path'
 
 export class ClassViewProvider implements vscode.WebviewViewProvider {
