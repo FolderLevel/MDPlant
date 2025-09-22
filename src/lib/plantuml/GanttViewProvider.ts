@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import * as mdplantlibapi from "./mdplantlibapi"
+import * as mdplantlibapi from "../../mdplantlibapi"
 
 export class GanttViewProvider implements vscode.WebviewViewProvider {
 

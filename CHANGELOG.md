@@ -4,6 +4,18 @@ All notable changes to the "mdplant" extension will be documented in this file.
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [2.1.15] - 2025-9-22
+
+### Added
+- 无
+
+### Changed
+- 
+- 
+
+### Fixed
+- menu忽略作者信息
+
 ## [2.1.14] - 2025-8-30
 
 ### Added
