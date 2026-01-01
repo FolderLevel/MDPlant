@@ -499,6 +499,10 @@ export function getRelativeDir(editor: vscode.TextEditor) {
     return path.dirname(getRelativePath(editor.document.uri.fsPath))
 }
 
+export function getAbsoluteDir(editor: vscode.TextEditor) {
+    return path.dirname(editor.document.uri.fsPath)
+}
+
 export function doList(textLine: string) {
     return mdplantlib.convert2List(textLine).content
 }

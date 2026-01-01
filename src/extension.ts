@@ -1326,6 +1326,7 @@ export async function doTerminal(activeEditor: vscode.TextEditor, activeTerminal
         }
 
         cmd = matchValue[1]
+        currentFileDir = mdplantlibapi.getAbsoluteDir(activeEditor)
 
         if (cmd.includes(" refers/")) {
             // cmd = cmd.replace(" refers/", " " + mdplantlibapi.getRelativeDir(activeEditor) + "/" + "refers/")
@@ -1333,7 +1334,7 @@ export async function doTerminal(activeEditor: vscode.TextEditor, activeTerminal
         } else if (cmd.startsWith("refers/")) {
             cmd = cmd.replace(/refers\//g, currentFileDir + "/refers/")
         } else if (cmd.startsWith("/")) {
-            cmd = cmd.substring(1)
+            cmd = currentFileDir + cmd
         }
 
         logger.info(cmd)

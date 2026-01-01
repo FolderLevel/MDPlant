@@ -4,6 +4,17 @@ All notable changes to the "mdplant" extension will be documented in this file.
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [2.1.16] - 2026-1-1
+
+### Added
+- 无
+
+### Changed
+- 快捷键执行命令将相对路径替换为绝对路径，减少终端路径一定要在工作目录下才生效问题
+
+### Fixed
+- 无
+
 ## [2.1.15] - 2025-9-22
 
 ### Added
