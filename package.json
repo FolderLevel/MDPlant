@@ -224,11 +224,6 @@
 					"default": "png",
 					"description": "paste image suffix"
 				},
-				"MDPlant.terminal.type": {
-					"type": "string",
-					"default": "none",
-					"description": "cmd with split terminal"
-				},
 				"MDPlant.docs.author": {
 					"type": "boolean",
 					"default": false,

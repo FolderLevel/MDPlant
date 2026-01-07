@@ -13,9 +13,6 @@ import * as ClassVP from "./lib/plantuml/ClassViewProvider"
 import { getLastDocInfo } from 'mdplantlib/lib/project'
 
 const logger = new mdplantlibapi.Loggger("mdplant", true)
-let terminalTypes = ["none", "split"]
-let terminalType = "none"
-let terminalStatusBarItem: vscode.StatusBarItem;
 
 export function doPlantumlLineShortcut(activeEditor: vscode.TextEditor, lineText:string = "")
 {
@@ -1218,37 +1215,7 @@ function provideHover(document: vscode.TextDocument, position: vscode.Position) 
 
 export async function doTerminal(activeEditor: vscode.TextEditor, activeTerminal: vscode.Terminal) {
     // console.log(activeTerminal.name)
-    logger.info("doTerminal: " + terminalType)
-
-    var workTerminal = undefined
-    var outTerminal = undefined
-    if (terminalType == "split") {
-        for(const t of vscode.window.terminals) {
-            if (t.name == "MDPlant") {
-                logger.info("found terminal: " + t.name)
-                workTerminal = t
-            }
-
-            if (t.name == "MDPlantOut") {
-                logger.info("found terminal: " + t.name)
-                outTerminal = t
-            }
-        }
-
-        if (workTerminal == undefined) {
-            workTerminal = vscode.window.createTerminal("MDPlant")
-        }
-
-        if (outTerminal == undefined) {
-            outTerminal = vscode.window.createTerminal("MDPlantOut")
-
-            var outDir = mdplantlibapi.getRootPath(vscode.window.activeTextEditor) + "/out"
-            if(!fs.existsSync(outDir))
-                fs.mkdirSync(outDir)
-
-            outTerminal.sendText("cd out")
-        }
-    }
+    logger.info("doTerminal")
 
     var line = activeEditor.selection.active.line
     let range = new vscode.Range(activeEditor.document.lineAt(line).range.start, activeEditor.document.lineAt(line).range.end)
@@ -1258,6 +1225,12 @@ export async function doTerminal(activeEditor: vscode.TextEditor, activeTerminal
     let cmd = ""
     let currentFileDir = mdplantlibapi.getRelativeDir(activeEditor)
     let rootPath = mdplantlibapi.getRootPath(activeEditor).replace(/\\/g, "/")
+
+    let terminal = vscode.window.activeTerminal
+    if (terminal == undefined) {
+        terminal = vscode.window.createTerminal("MDPlant")
+        terminal.show()
+    }
 
     if (rootPath == undefined || rootPath[0] == undefined) {
         logger.info("root path is undefined")
@@ -1327,6 +1300,14 @@ export async function doTerminal(activeEditor: vscode.TextEditor, activeTerminal
 
         cmd = matchValue[1]
         currentFileDir = mdplantlibapi.getAbsoluteDir(activeEditor)
+        let terminalCwd = activeTerminal.shellIntegration?.cwd?.path
+        logger.info("current file dir: " + currentFileDir)
+        logger.info("terminal cwd:     " + terminalCwd)
+        if (terminalCwd != undefined) {
+            if (currentFileDir.startsWith(terminalCwd)) {
+                currentFileDir = currentFileDir.replace(terminalCwd, "").replace(/\\/g, "/").substring(1)
+            }
+        }
 
         if (cmd.includes(" refers/")) {
             // cmd = cmd.replace(" refers/", " " + mdplantlibapi.getRelativeDir(activeEditor) + "/" + "refers/")
@@ -1338,26 +1319,12 @@ export async function doTerminal(activeEditor: vscode.TextEditor, activeTerminal
         }
 
         logger.info(cmd)
-        if (terminalType == "split") {
-            if(((cmd.search("adb push") != -1) && (cmd.search("refers/") != -1))
-                || (cmd.startsWith("src/") && (cmd.search("/refers/") != -1))
-                    )
-                workTerminal?.sendText(cmd, true)
-            else
-                outTerminal?.sendText(cmd, true)
-        } else {
-            activeTerminal.sendText(cmd, true)
-        }
+        activeTerminal?.sendText(cmd, true)
 
         return true
     }
 
     return false
-}
-
-function updateStatusBarItem(mode: string): void {
-    terminalStatusBarItem.text = "terminal type: " + mode;
-    terminalStatusBarItem.show();
 }
 
 // this method is called when your extension is activated
@@ -1671,23 +1638,6 @@ export function activate(context: vscode.ExtensionContext) {
     const classProvider = new ClassVP.ClassViewProvider(context.extensionUri);
 	context.subscriptions.push(vscode.window.registerWebviewViewProvider(ClassVP.ClassViewProvider.viewType, classProvider));
 
-    // create a new status bar item that we can now manage
-    const mdTerminal = 'extension.mdterminal';
-    terminalStatusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
-    terminalStatusBarItem.command = mdTerminal;
-    context.subscriptions.push(terminalStatusBarItem);
-    terminalType = mdplantlibapi.getConfig("MDPlant.terminal.type", "none")
-    updateStatusBarItem(terminalType)
-
-    context.subscriptions.push(vscode.commands.registerCommand(mdTerminal, async () => {
-        const result = await vscode.window.showQuickPick(terminalTypes);
-        if (result != undefined && result.length != 0) {
-            terminalType = result
-            updateStatusBarItem(terminalType)
-            mdplantlibapi.setConfig("MDPlant.terminal.type", terminalType)
-        }
-	}));
-
     context.subscriptions.push(vscode.languages.registerHoverProvider('markdown', {
         provideHover
     }));
@@ -1707,7 +1657,6 @@ export function activate(context: vscode.ExtensionContext) {
     });
 
     context.subscriptions.push(disposable);
-
 }
 
 // this method is called when your extension is deactivated
