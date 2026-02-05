@@ -1318,6 +1318,22 @@ export async function doTerminal(activeEditor: vscode.TextEditor, activeTerminal
             cmd = currentFileDir + cmd
         }
 
+        if (terminalCwd != undefined && terminalCwd != null) {
+            if (rootPath != terminalCwd.replace(/\\/g, "/")) {
+                currentFileDir = rootPath
+
+                if (cmd.includes(" out/")) {
+                    cmd = cmd.replace(/ out\//g, " " + currentFileDir + "/out/")
+                }
+                if (cmd.includes(" out ")) {
+                    cmd = cmd.replace(/ out /g, " " + currentFileDir + "/out ")
+                }
+                if (cmd.endsWith(" out")) {
+                    cmd = cmd.replace(/ out/g, " " + currentFileDir + "/out")
+                }
+            }
+        }
+
         logger.info(cmd)
         activeTerminal?.sendText(cmd, true)
 

@@ -4,9 +4,9 @@
 	"displayName": "MDPlant",
 	"description": "markdown文档编写工具",
 	"icon": "assets/images/icon.png",
-	"version": "2.1.16",
+	"version": "3.0.0",
 	"engines": {
-		"vscode": "^1.73.0"
+		"vscode": "^1.93.0"
 	},
 	"categories": [
 		"Other"

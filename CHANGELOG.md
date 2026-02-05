@@ -4,6 +4,17 @@ All notable changes to the "mdplant" extension will be documented in this file.
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [3.0.0] - 2026-2-5
+
+### Added
+- 无
+
+### Changed
+- 从终端获取cwd来判定发送到终端的命令路径
+
+### Fixed
+- 无
+
 ## [2.1.16] - 2026-1-1
 
 ### Added
