@@ -1314,7 +1314,7 @@ export async function doTerminal(activeEditor: vscode.TextEditor, activeTerminal
             cmd = cmd.replace(/ refers\//g, " " + currentFileDir + "/refers/")
         } else if (cmd.startsWith("refers/")) {
             cmd = cmd.replace(/refers\//g, currentFileDir + "/refers/")
-        } else if (cmd.startsWith("/")) {
+        } else if (cmd.startsWith("/refers")) {
             cmd = currentFileDir + cmd
         }
 
