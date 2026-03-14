@@ -1331,6 +1331,13 @@ export async function doTerminal(activeEditor: vscode.TextEditor, activeTerminal
                 if (cmd.endsWith(" out")) {
                     cmd = cmd.replace(/ out/g, " " + currentFileDir + "/out")
                 }
+
+                if (cmd.includes(" /src/") || cmd.includes(" /docs/") || cmd.startsWith("/src/") || cmd.startsWith("/docs/")) {
+                    cmd = cmd.replace(/ \/src\//g,  " " + currentFileDir + "/src/")
+                    cmd = cmd.replace(/ \/docs\//g, " " + currentFileDir + "/docs/")
+                    cmd = cmd.replace(/^\/src\//,   " " + currentFileDir + "/src/")
+                    cmd = cmd.replace(/^\/docs\//,  " " + currentFileDir + "/docs/")
+                }
             }
         }
 
