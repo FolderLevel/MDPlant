@@ -3,6 +3,7 @@
 import * as vscode from 'vscode'
 import * as fs from 'fs'
 import * as path from 'path'
+import pangu from 'pangu';
 
 import * as mdplantlibapi from "./mdplantlibapi"
 import * as SequenceVP from "./lib/plantuml/SequenceViewProvider"
@@ -560,6 +561,29 @@ function doFile(filePath: string) {
         mdplantlibapi.refreshReadmeDocsTable(rootPath + "/" + pathInfo.subPath + "/README.md", rootPath + "/" + pathInfo.subPath + "/" + pathInfo.subSrcPath)
     }
 }
+
+function doPanguFile(event: vscode.TextDocumentWillSaveEvent) {
+    const document = event.document;
+    const originalText = document.getText();
+    const spacedText = pangu.spacingText(originalText);
+    const activeEditor = vscode.window.activeTextEditor
+
+    if (originalText === spacedText) {
+        return;
+    }
+
+    activeEditor?.edit(edit => {
+        const firstLine = document.lineAt(0);
+        const lastLine = document.lineAt(document.lineCount - 1);
+        const fullRange = new vscode.Range(
+            firstLine.range.start,
+            lastLine.range.end
+        );
+
+        const textEdit = edit.replace(fullRange, spacedText);
+    })
+}
+
 export async function doSort(filePath: string) {
     logger.info("doSort: " + filePath)
 
@@ -1582,6 +1606,17 @@ export function activate(context: vscode.ExtensionContext) {
     })
 
     context.subscriptions.push(onDidSaveTextDocumentEventDispose)
+
+    let onWillSaveTextDocumentEventDispose = vscode.workspace.onWillSaveTextDocument(function(event){
+        const panguEnabled = mdplantlibapi.getConfig("MDPlant.docs.pangu", false);
+        if (!panguEnabled) {
+            return;
+        }
+
+        logger.info("doPanguFile: " + event.document.uri.fsPath)
+        doPanguFile(event)
+    })
+    context.subscriptions.push(onWillSaveTextDocumentEventDispose)
 
     let onDidDeleteFilesEventDispose  = vscode.workspace.onDidDeleteFiles(function(event){
         logger.info("doDelete: " + event.files[0].fsPath)

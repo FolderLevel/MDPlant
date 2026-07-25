@@ -4,6 +4,18 @@ All notable changes to the "mdplant" extension will be documented in this file.
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [3.0.4] - 2026-7-25
+
+### Added
+- Spaces between Chinese and English characters
+
+### Changed
+- 无
+
+### Fixed
+- 无
+
+
 ## [3.0.3] - 2026-4-7
 
 ### Added

@@ -4,7 +4,7 @@
 	"displayName": "MDPlant",
 	"description": "markdown文档编写工具",
 	"icon": "assets/images/icon.png",
-	"version": "3.0.3",
+	"version": "3.0.4",
 	"engines": {
 		"vscode": "^1.93.0"
 	},
@@ -228,6 +228,11 @@
 					"type": "boolean",
 					"default": false,
 					"description": "docs show author"
+				},
+				"MDPlant.docs.pangu": {
+					"type": "boolean",
+					"default": false,
+					"description": "Spaces between Chinese and English characters"
 				}
 			}
 		}
@@ -259,6 +264,7 @@
 		"url": "https://github.com/FolderLevel/MDPlant"
 	},
 	"dependencies": {
+		"pangu": "^8.0.0",
 		"mdplantlib": "file:../MDPlantLib"
 	}
 }
