@@ -731,3 +731,19 @@ export function formatIndex(srcPath: string, fileIndex: string = "") {
 export function generateAuthorInfo(authorInfo: string[], info: { [key: string]: string }) {
     return mdplantlib.generateAuthorInfo(authorInfo, info)
 }
+
+export function normalizeTerminalCwd(terminalCwd: string | undefined): string {
+    if (terminalCwd == undefined || terminalCwd == null) {
+        return ""
+    }
+
+    // 如果是 Windows 环境
+    if (process.platform === 'win32') {
+        // 1. 先去除 Git Bash 产生的开头的斜杠 /G:/ -> G:/
+        const cleanPath = terminalCwd.replace(/^\/([a-zA-Z]:)/, '$1');
+
+        // 2. 利用 vscode.Uri 转换为符合 vscode 标准的 fsPath（盘符会自动转为小写）
+        return vscode.Uri.file(cleanPath).fsPath;
+    }
+    return terminalCwd;
+}

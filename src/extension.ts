@@ -1325,6 +1325,7 @@ export async function doTerminal(activeEditor: vscode.TextEditor, activeTerminal
         cmd = matchValue[1]
         currentFileDir = mdplantlibapi.getAbsoluteDir(activeEditor)
         let terminalCwd = activeTerminal.shellIntegration?.cwd?.path
+        terminalCwd = mdplantlibapi.normalizeTerminalCwd(terminalCwd)
         logger.info("current file dir: " + currentFileDir)
         logger.info("terminal cwd:     " + terminalCwd)
         if (terminalCwd != undefined) {
@@ -1343,7 +1344,7 @@ export async function doTerminal(activeEditor: vscode.TextEditor, activeTerminal
         }
 
         if (terminalCwd != undefined && terminalCwd != null) {
-            if (rootPath != terminalCwd.replace(/\\/g, "/")) {
+            if (rootPath != terminalCwd.replace(/\\/g, "/") && terminalCwd.replace(/\\/g, "/").startsWith(rootPath)) {
                 currentFileDir = rootPath
 
                 if (cmd.includes(" out/")) {
