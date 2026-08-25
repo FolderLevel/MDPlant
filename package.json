@@ -255,6 +255,7 @@
 		"@typescript-eslint/parser": "^6.7.0",
 		"eslint": "^8.32.0",
 		"glob": "^7.1.6",
+		"minimatch": "^5.1.6",
 		"mocha": "^7.0.1",
 		"typescript": "^5.2.2",
 		"vscode-test": "^1.3.0"
@@ -264,7 +265,7 @@
 		"url": "https://github.com/FolderLevel/MDPlant"
 	},
 	"dependencies": {
-		"pangu": "^8.0.0",
-		"mdplantlib": "file:../MDPlantLib"
+		"mdplantlib": "file:../MDPlantLib",
+		"pangu": "^8.0.0"
 	}
 }
