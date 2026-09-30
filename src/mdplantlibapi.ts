@@ -13,29 +13,27 @@ const logger                        = new Loggger("mdplantlib", true)
  * 获取Git配置信息
  */
 export function getGitConfig(){
-    let configSrcs = ["--global", "--local"]
+    const configCommands = [
+        ["config", "--global", "--list"],
+        ["config", "--list", "--file", path.join(getRootPath(undefined), ".git", "config")]
+    ]
     let gitConfigDict: { [key: string]: string } = {"user.name": "N/A", "user.email": "N/A"};
-    let rootPath = getRootPath(undefined)
-
-    logger.debug(`getGitConfig: ${rootPath}`)
-    configSrcs.forEach(configSrc => {
+    logger.debug(`getGitConfig: ${getRootPath(undefined)}`)
+    configCommands.forEach(args => {
         try {
-            let command = ""
-            if (configSrc == "--global") {
-                command = `git config ${configSrc} --list`;
-            } else {
-                command = `git config --list -f ${rootPath}/.git/config`;
-            }
-
-            const output = child_process.execSync(command).toString().trim();
-            const configLines = output.split('\n');
+            const output = child_process.execFileSync("git", args).toString();
+            const configLines = output.split(/\r?\n/);
             configLines.forEach(line => {
-                const [key, value] = line.split('=');
-                gitConfigDict[key] = value;
+                const separatorIndex = line.indexOf('=');
+                if (separatorIndex >= 0) {
+                    const key = line.slice(0, separatorIndex);
+                    const value = line.slice(separatorIndex + 1);
+                    gitConfigDict[key] = value;
+                }
             });
         } catch (error) {
             // 忽略非Git仓库的错误
-            logger.debug(`Error getting Git config ${configSrc}: ${error}`);
+            logger.debug(`Error getting Git config ${args[1]}: ${error}`);
         }
     });
 
@@ -626,8 +624,8 @@ export function convert2SequenceDiagram(contentArray: string[], startLine: numbe
     return mdplantlib.convert2SequenceDiagram(contentArray, skipLevel).content.split("\n")
 }
 
-export function getConfig(name: string, defaultValue: any) {
-    return vscode.workspace.getConfiguration().get(name) || defaultValue
+export function getConfig<T>(name: string, defaultValue: T): T {
+    return vscode.workspace.getConfiguration().get<T>(name, defaultValue)
 }
 
 export function setConfig(name: string, value: any) {

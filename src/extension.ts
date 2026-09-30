@@ -307,6 +307,7 @@ export function doList(activeEditor: vscode.TextEditor, clipboardContent = "")
 
 export async function doPaste(activeEditor: vscode.TextEditor)
 {
+    const line = activeEditor.selection.active.line
     mdplantlibapi.saveImageFile(activeEditor, imageFileRelativePath => {
         imageFileRelativePath += "." + mdplantlibapi.getConfig("MDPlant.paste.image.suffix", "png")
 
@@ -320,20 +321,16 @@ export async function doPaste(activeEditor: vscode.TextEditor)
 
         let ret = mdplantlibapi.saveClipboardImage(targetFilePath)
         if (ret?.status) {
-            var editor = vscode.window.activeTextEditor
-            var line = activeEditor.selection.active.line
-            if (editor != undefined) {
-                editor.edit(edit => {
-                    let range = new vscode.Range(activeEditor.document.lineAt(line).range.start, activeEditor.document.lineAt(line).range.end)
-                    let rawText = activeEditor.document.getText(range)
-                    let spaceString = rawText.match(/^\s*/)
-                    edit.replace(range, spaceString + "![" + path.basename(imageFileRelativePath) + "](" + imageFileRelativePath + ")")
+            activeEditor.edit(edit => {
+                let range = new vscode.Range(activeEditor.document.lineAt(line).range.start, activeEditor.document.lineAt(line).range.end)
+                let rawText = activeEditor.document.getText(range)
+                let spaceString = rawText.match(/^\s*/)
+                edit.replace(range, spaceString + "![" + path.basename(imageFileRelativePath) + "](" + imageFileRelativePath + ")")
 
-                    logger.info("doPaste: " + imageFileRelativePath)
-                }).then(value => {
-                    mdplantlibapi.cursor(activeEditor, line)
-                })
-            }
+                logger.info("doPaste: " + imageFileRelativePath)
+            }).then(value => {
+                mdplantlibapi.cursor(activeEditor, line)
+            })
         } else {
             vscode.window.showInformationMessage("save image error: " + (ret?.content ?? ""))
         }
@@ -495,7 +492,7 @@ export function doCopyShortcut(activeEditor: vscode.TextEditor, lineValue: strin
 
             doFile(output)
 
-            await vscode.workspace.openTextDocument(vscode.Uri.parse(output)).then( async doc => {
+            await vscode.workspace.openTextDocument(vscode.Uri.file(output)).then( async doc => {
                 await vscode.window.showTextDocument(doc, { preview: false }).then(async editor => {
                     logger.info("show file success...")
 
@@ -562,22 +559,21 @@ function doPanguFile(event: vscode.TextDocumentWillSaveEvent) {
     const originalText = document.getText();
     const panguWithSpacingText = pangu as typeof pangu & { spacingText(text: string): string }
     const spacedText = panguWithSpacingText.spacingText(originalText);
-    const activeEditor = vscode.window.activeTextEditor
 
     if (originalText === spacedText) {
         return;
     }
 
-    activeEditor?.edit(edit => {
-        const firstLine = document.lineAt(0);
-        const lastLine = document.lineAt(document.lineCount - 1);
-        const fullRange = new vscode.Range(
-            firstLine.range.start,
-            lastLine.range.end
-        );
+    const firstLine = document.lineAt(0);
+    const lastLine = document.lineAt(document.lineCount - 1);
+    const fullRange = new vscode.Range(
+        firstLine.range.start,
+        lastLine.range.end
+    );
 
-        const textEdit = edit.replace(fullRange, spacedText);
-    })
+    event.waitUntil(Promise.resolve([
+        vscode.TextEdit.replace(fullRange, spacedText)
+    ]))
 }
 
 export async function doSort(filePath: string) {
