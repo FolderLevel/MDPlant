@@ -6,11 +6,6 @@ import * as path from 'path'
 import pangu = require('pangu')
 
 import * as mdplantlibapi from "./mdplantlibapi"
-import * as SequenceVP from "./lib/plantuml/SequenceViewProvider"
-import * as GanttVP from "./lib/plantuml/GanttViewProvider"
-import * as MindMapVP from "./lib/plantuml/MindMapViewProvider"
-import * as WelcomPageVP from "./lib/plantuml/WelcomePageProvider"
-import * as ClassVP from "./lib/plantuml/ClassViewProvider"
 import { getLastDocInfo } from './lib/mdplantlib/project'
 
 const logger = new mdplantlibapi.Loggger("mdplant", true)
@@ -1680,23 +1675,6 @@ export function activate(context: vscode.ExtensionContext) {
         'drawio',
         path.basename(mdplantlibapi.getRootPath(undefined)),
     ]);
-
-    const welcomPageProvider = new WelcomPageVP.WelcomePageProvider(context.extensionUri);
-	context.subscriptions.push(vscode.window.registerWebviewViewProvider(WelcomPageVP.WelcomePageProvider.viewType, welcomPageProvider));
-
-    const sequenceProvider = new SequenceVP.SequenceViewProvider(context.extensionUri);
-	context.subscriptions.push(vscode.window.registerWebviewViewProvider(SequenceVP.SequenceViewProvider.viewType, sequenceProvider));
-
-    /*
-    const ganttProvider = new GanttVP.GanttViewProvider(context.extensionUri);
-	context.subscriptions.push(vscode.window.registerWebviewViewProvider(GanttVP.GanttViewProvider.viewType, ganttProvider));
-    */
-
-    const mindmapProvider = new MindMapVP.MindMapViewProvider(context.extensionUri);
-	context.subscriptions.push(vscode.window.registerWebviewViewProvider(MindMapVP.MindMapViewProvider.viewType, mindmapProvider));
-
-    const classProvider = new ClassVP.ClassViewProvider(context.extensionUri);
-	context.subscriptions.push(vscode.window.registerWebviewViewProvider(ClassVP.ClassViewProvider.viewType, classProvider));
 
     context.subscriptions.push(vscode.languages.registerHoverProvider('markdown', {
         provideHover

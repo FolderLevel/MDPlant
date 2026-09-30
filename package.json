@@ -167,39 +167,6 @@
 				"when": "editorTextFocus"
 			}
 		],
-		"viewsContainers": {
-			"activitybar": [
-				{
-					"id": "mdplant",
-					"title": "MDPlant",
-					"icon": "assets/images/icon.svg"
-				}
-			]
-		},
-		"views": {
-			"mdplant": [
-				{
-					"type": "webview",
-					"id": "WelcomePage",
-					"name": "Welcome Page"
-				},
-				{
-					"type": "webview",
-					"id": "SequenceDiagram",
-					"name": "Sequence Diagram"
-				},
-				{
-					"type": "webview",
-					"id": "ClassDiagram",
-					"name": "Class Diagram"
-				},
-				{
-					"type": "webview",
-					"id": "MindMapDiagram",
-					"name": "MindMap Diagram"
-				}
-			]
-		},
 		"configuration": {
 			"type": "object",
 			"title": "MDPlant",
