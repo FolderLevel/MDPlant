@@ -1,0 +1,73 @@
+{
+    "table": {
+        "titles": [
+            "NO.",
+            "简介",
+            "链接"
+        ],
+        "datas": [
+            [
+                "*",
+                "文档信息汇总",
+                [
+                    {
+                        "title": "早期博客园(cnblogs)文档",
+                        "link": "https://www.cnblogs.com/zengjfgit/"
+                    },
+                    {
+                        "title": "GitHub账号: ZengjfOS",
+                        "link": "https://github.com/ZengjfOS"
+                    }
+                ]
+            ],
+            [
+                "*",
+                "Android 代码检索",
+                [
+                    {
+                        "title": "Android 官方代码检索",
+                        "link": "https://cs.android.com/"
+                    },
+                    {
+                        "title": "Android 7 ~ latest OpenGrok Search",
+                        "link": "http://aospxref.com/"
+                    },
+                    {
+                        "title": "Android 1 ~ 9 OpenGrok Search",
+                        "link": "http://androidxref.com/"
+                    },
+                    {
+                        "title": "Android中国网址",
+                        "link": "https://developer.android.google.cn"
+                    },
+                    {
+                        "title": "Google开发者",
+                        "link": "https://developers.google.cn"
+                    }
+                ]
+            ],
+            [
+                "*",
+                "Linux内核源代码",
+                [
+                    {
+                        "title": "Linux 源代码在线检索",
+                        "link": "https://elixir.bootlin.com/linux/latest/source"
+                    },
+                    {
+                        "title": "realme MTK 4.19源代码",
+                        "link": "https://github.com/realme-kernel-opensource/realme_C21-AndroidR-kernel-source"
+                    },
+                    {
+                        "title": "荣耀 Open Source",
+                        "link": "https://www.hihonor.com/global/opensource/"
+                    },
+                    {
+                        "title": "华为 Open Source",
+                        "link": "https://consumer.huawei.com/en/opensource/"
+                    }
+                ]
+            ]
+        ]
+    }
+}

@@ -239,16 +239,18 @@
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
-		"compile": "tsc -p ./",
+		"compile": "tsc -p ./ && node scripts/copy-mdplantlib-resources.js",
 		"lint": "eslint src --ext ts",
 		"watch": "tsc -watch -p ./",
 		"pretest": "npm run compile && npm run lint",
 		"test": "node ./out/test/runTest.js"
 	},
 	"devDependencies": {
+		"@types/fs-extra": "^9.0.13",
 		"@types/glob": "^7.1.1",
 		"@types/mocha": "^7.0.1",
 		"@types/node": "^12.11.7",
+		"@types/plantuml-encoder": "^1.4.2",
 		"@types/vscode": "^1.93.0",
 		"@types/vscode-webview": "^1.57.0",
 		"@typescript-eslint/eslint-plugin": "^6.7.0",
@@ -265,7 +267,9 @@
 		"url": "https://github.com/FolderLevel/MDPlant"
 	},
 	"dependencies": {
-		"mdplantlib": "file:../MDPlantLib",
-		"pangu": "^8.0.0"
+		"fs-extra": "^10.1.0",
+		"node-xlsx": "^0.21.0",
+		"pangu": "^8.0.0",
+		"plantuml-encoder": "^1.4.0"
 	}
 }

@@ -3,7 +3,7 @@
 import * as vscode from 'vscode'
 import * as fs from 'fs'
 import * as path from 'path'
-import pangu from 'pangu';
+import pangu = require('pangu')
 
 import * as mdplantlibapi from "./mdplantlibapi"
 import * as SequenceVP from "./lib/plantuml/SequenceViewProvider"
@@ -11,7 +11,7 @@ import * as GanttVP from "./lib/plantuml/GanttViewProvider"
 import * as MindMapVP from "./lib/plantuml/MindMapViewProvider"
 import * as WelcomPageVP from "./lib/plantuml/WelcomePageProvider"
 import * as ClassVP from "./lib/plantuml/ClassViewProvider"
-import { getLastDocInfo } from 'mdplantlib/lib/project'
+import { getLastDocInfo } from './lib/mdplantlib/project'
 
 const logger = new mdplantlibapi.Loggger("mdplant", true)
 
@@ -324,7 +324,7 @@ export async function doPaste(activeEditor: vscode.TextEditor)
         }
 
         let ret = mdplantlibapi.saveClipboardImage(targetFilePath)
-        if (ret.status) {
+        if (ret?.status) {
             var editor = vscode.window.activeTextEditor
             var line = activeEditor.selection.active.line
             if (editor != undefined) {
@@ -340,7 +340,7 @@ export async function doPaste(activeEditor: vscode.TextEditor)
                 })
             }
         } else {
-            vscode.window.showInformationMessage("save image error: " + ret.content)
+            vscode.window.showInformationMessage("save image error: " + (ret?.content ?? ""))
         }
     })
 }
@@ -565,7 +565,8 @@ function doFile(filePath: string) {
 function doPanguFile(event: vscode.TextDocumentWillSaveEvent) {
     const document = event.document;
     const originalText = document.getText();
-    const spacedText = pangu.spacingText(originalText);
+    const panguWithSpacingText = pangu as typeof pangu & { spacingText(text: string): string }
+    const spacedText = panguWithSpacingText.spacingText(originalText);
     const activeEditor = vscode.window.activeTextEditor
 
     if (originalText === spacedText) {

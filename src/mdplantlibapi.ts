@@ -2,7 +2,7 @@ import * as vscode from 'vscode'
 import * as path from 'path'
 import * as fs from 'fs'
 import * as child_process from 'child_process'
-import * as mdplantlib from 'mdplantlib'
+import * as mdplantlib from './lib/mdplantlib'
 
 export let projectPathTypeEnum      = mdplantlib.projectPathTypeEnum
 export let projectTextBlockTypeEnum = mdplantlib.projectTextBlockTypeEnum
