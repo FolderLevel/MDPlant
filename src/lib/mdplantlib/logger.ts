@@ -50,7 +50,7 @@ class Logger {
      * @param  {...any} msg 
      */
     info(format: unknown, ...msg: unknown[]): void {
-        let msgString = eval("util.format(format, \"" + msg.join("\", \"") + "\")")
+        let msgString = util.format(format, ...msg)
         if (Logger._color)
             console.log("[\x1b[34minfo\x1b[0m] [" + this.tag + "]: " + msgString)
         else
@@ -63,7 +63,7 @@ class Logger {
      * @param  {...any} msg 
      */
     debug(format: unknown, ...msg: unknown[]): void {
-        let msgString = eval("util.format(format, \"" + msg.join("\", \"") + "\")")
+        let msgString = util.format(format, ...msg)
         if (Logger._color)
             console.log("[\x1b[32mdebug\x1b[0m] [" + this.tag + "]: " + msgString)
         else
@@ -76,7 +76,7 @@ class Logger {
      * @param  {...any} msg 
      */
     error(format: unknown, ...msg: unknown[]): void {
-        let msgString = eval("util.format(format, \"" + msg.join("\", \"") + "\")")
+        let msgString = util.format(format, ...msg)
         if (Logger._color)
             console.log("[\x1b[31merror\x1b[0m] [" + this.tag + "]: " + msgString)
         else
